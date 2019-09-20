@@ -1,0 +1,190 @@
+
+
+<html>
+
+    <head>
+        
+        <title>CodePlayer</title>
+ 
+        <script type="text/javascript" src="jquery.js"></script>
+        
+        <script src="jquery-ui/jquery-ui.js"></script>      
+        
+        <link href="jquery-ui/jquery-ui.css" rel="stylesheet">
+        
+        <style type="text/css">
+            
+            body{
+                font-family: sans-serif;
+                padding: 0;
+                margin: 0;
+            }
+            
+            #topbar{
+                width: 100%;
+                height: 40px;
+                background-color: #EDEDED;
+                border: #BFBFBF 1px solid;
+                padding: 5px;
+                
+            }
+            #logo{
+                font-weight:bold;
+                font-size: 120%;
+                padding: 9px 10px;
+                float: left;
+                
+            }
+            #buttonContainer{
+                width: 233px;
+                margin: 0 auto;
+                padding: 5px;
+                
+            }
+            .toggleButton{
+                float: left;
+                border: #BFBFBF 1px solid;
+                border-right: none;
+                padding:  6px;
+                font-size: 90%;
+                
+            }
+            #html{
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            #output{
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-right: #BFBFBF 1px solid;
+            }
+            .active{
+                
+                background-color: #e8f2f4;
+            }
+            .highlightedButton{
+                
+                background-color: #b1e6ef;
+                
+            }
+
+            textarea{
+               
+                resize: none;
+                border-top: none;
+                border-color: grey;
+                
+            }
+            .panel{
+                float: left;
+                width: 50%;
+                border-left: none;
+    
+                
+            }
+            iframe{
+                border: none;
+                
+            }
+            .hidden{
+                display: none;
+            }
+        
+        
+        
+        
+        
+        </style>
+        
+       
+    </head>
+
+    <body>
+        
+          <div id="topbar">
+            <div id="logo"> CodePlayer</div>
+            
+          <div id="buttonContainer">
+                
+                <div class="toggleButton active" id="html">HTML</div>
+                
+                <div class="toggleButton" id="css">CSS</div>
+                
+                <div class="toggleButton" id="javascript">JavaScript</div>
+                
+                <div class="toggleButton active" id="output">Output</div>
+            
+            </div>
+        
+                    
+           </div>
+        
+        
+        <div id="bodyContainer">
+        
+            <textarea id="htmlPanel" class="panel"><p id="paragraph">Hello!</p></textarea>
+            
+            <textarea id="cssPanel" class="panel hidden">p { color: green; }</textarea>
+            
+            <textarea id="javascriptPanel" class="panel hidden">document.getElementById("paragraph").innerHTML = "Hello Rob!";</textarea>
+            
+            <iframe id="outputPanel" class="panel"></iframe>
+        
+        
+        </div>
+        
+
+        <script type="text/javascript">
+            
+            function updateOutput(){
+                
+                $("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#cssPanel").val() + "</style></head><body>" + $("#htmlPanel").val() + "</body></html>");
+                
+                document.getElementById("outputPanel").contentWindow.eval($("#javascriptPanel").val());
+                
+                      
+            }
+            
+            $(".toggleButton").hover(function(){
+                $(this).addClass("highlightedButton");
+            }, function(){
+                
+                $(this).removeClass("highlightedButton");
+                
+            });
+            
+            $(".toggleButton").click(function() {
+                
+                $(this).toggleClass("active");
+                
+                $(this).removeClass("highlightedButton");
+                
+                var panelId = $(this).attr("id") + "Panel";
+                
+                $("#" + panelId).toggleClass("hidden");
+                
+                var numberOfActivePanels = 4 - $('.hidden').length;
+                
+                $(".panel").width(($(window).width() / numberOfActivePanels) - 10);
+                
+            })
+            
+            $(".panel").height($(window).height() - $("#topbar").height() - 15);
+            
+            $(".panel").width(($(window).width() / 2) - 10);
+            
+            updateOutput();
+            
+            $("textarea").on('change keyup paste', function() {
+    
+                updateOutput();
+                
+                
+            });
+
+
+        </script>
+        
+    </body>
+
+</html>
